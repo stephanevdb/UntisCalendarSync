@@ -8,7 +8,7 @@ const WebUntis = require("webuntis");
 const calendar = google.calendar({ version: "v3" });
 
 const auth = new GoogleAuth({
-    keyFilename: 'google-credentials.json',
+    keyFilename: 'config/google-credentials.json',
     scopes: ["https://www.googleapis.com/auth/calendar"]
 })
 
@@ -16,7 +16,7 @@ const authClient = auth.getClient().then(() => {
     getCalEvents().then((events) => addEvents(events))
 })
 
-let config = JSON.parse(fs.readFileSync('config.json'))
+let config = JSON.parse(fs.readFileSync('config/config.json'))
 const classList = config.ClassList
 const QRCodeData = config.Qr;
 //date of tomorrow
