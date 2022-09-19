@@ -1,0 +1,7 @@
+{
+  "Qr": "$QR",
+  "ClassList": "$CLASSLIST",
+  "daysToSync": "$DAYSTOSYNC",
+  "calendarID": "$CALENDARID",
+  "subjectBlacklist": "$BLACKLIST"
+}
