@@ -22,23 +22,19 @@ and save them as google-credentials.json in application directory.
 4. [Create a new calendar](https://support.google.com/calendar/answer/37095?hl=en) and save the calendar id in the config.json file.
 5. In the calendar settings go to "Share with specific people", click "Add poeple" and paste the client email from the downloaded JSON
 service key file.
-6. Paste your untis credentials in untis-credentials.json.
 
-```
-{
-    "school": "xyz",
-    "username": "abc",
-    "password": "*****",
-    "domain": "xxxx.webuntis.com"
-}
-```
+
+
 
 ## Configuration
 Configuration in config.json
 ```
 {
-   "daysToSync": 5 ,
-   "calendarID": "*********@group.calendar.google.com",
-   "subjectBlacklist": []
+  "Qr": "untis://setschool?url=[...]&school=[...]&user=[...]&key=[...]&schoolNumber=[...]>",
+  "ClassList": ["1IT6","2ITCSC1","1ITCSC2"],
+  "daysToSync": 5 ,
+  "calendarID": "*********@group.calendar.google.com",
+  "subjectBlacklist": ["Enterprise networking","Network Security","AI Principles","Project analysis","Ideation","AI principles",
+    "Neural networks","Security project"]
 }
 ```
