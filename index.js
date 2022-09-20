@@ -109,10 +109,12 @@ async function addEvents(events) {
 }
 
 async function getEvents() {
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
     return await calendar.events.list({
         auth: auth,
         calendarId: config.calendarID,
-        timeMin: (new Date()).toISOString(),
+        timeMin: date.toISOString(),
         singleEvents: true,
     })
 }
