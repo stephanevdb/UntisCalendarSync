@@ -1,10 +1,16 @@
 const WebUntisLib = require('webuntis');
 const fs = require('fs')
 
+
+const schedule = require("node-schedule");
 const { GoogleAuth } = require('google-auth-library');
 const { google } = require('googleapis');
 const WebUntis = require("webuntis");
 
+let config = JSON.parse(fs.readFileSync('config/config.json'))
+console.log("waiting")
+schedule.scheduleJob(config.schedule, () => {
+    console.log("Running")
 const calendar = google.calendar({ version: "v3" });
 
 const auth = new GoogleAuth({
@@ -16,7 +22,7 @@ const authClient = auth.getClient().then(() => {
     getCalEvents().then((events) => addEvents(events))
 })
 
-let config = JSON.parse(fs.readFileSync('config/config.json'))
+
 const classList = config.ClassList
 const QRCodeData = config.Qr;
 //date of tomorrow
@@ -116,6 +122,6 @@ async function getEvents() {
         timeMin: date.toISOString(),
         singleEvents: true,
     })
-}
+}})
 
 

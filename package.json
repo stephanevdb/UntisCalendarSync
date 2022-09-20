@@ -2,6 +2,7 @@
   "dependencies": {
     "google-auth-library": "^8.1.1",
     "googleapis": "^105.0.0",
+    "node-schedule": "^2.1.0",
     "webuntis": "^1.18.0"
   },
   "name": "untiscalendarsync",
