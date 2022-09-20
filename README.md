@@ -13,7 +13,7 @@ Sync Untis to google calendar
 3. [Create a service account and credentials](https://developers.google.com/workspace/guides/create-credentials#service-account) 
 and save them as google-credentials.json in application directory.
 4. [Create a new calendar](https://support.google.com/calendar/answer/37095?hl=en) and save the calendar id in the config.json file and add this to the config folder on the host.
-5. In the calendar settings go to "Share with specific people", click "Add poeple" and paste the client email from the downloaded JSON
+5. In the calendar settings go to "Share with specific people", click "Add people" and paste the client email from the downloaded JSON
 service key file.
 
 
