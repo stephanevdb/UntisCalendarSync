@@ -4,15 +4,8 @@ Sync Untis to google calendar
 ## Prerequisites                                                                
 * Docker 
 * Google account with Google Calendar
+* config folder on host
 
-
-
-## Installation
-```
-npm install webuntis 
-npm install googleapis
-npm install google-auth-library
-```
 
 ## Setup
 1. [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project).
