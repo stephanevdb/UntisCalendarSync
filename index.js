@@ -41,37 +41,50 @@ async function getClassID(classname) {
 }
 // ---------------------------- Google Calendar ----------------------------
 
-async function getCalEvents() {
-    await untis.login()
-    const today = new Date()
-    today.setMonth(today.getMonth())
-    let endtime = new Date(today.getTime())
-    endtime.setDate(today.getDate() + config.daysToSync - 1)
+    async function getCalEvents() {
+        await untis.login()
+        const today = new Date()
+        today.setMonth(today.getMonth())
+        let endtime = new Date(today.getTime())
+        endtime.setDate(today.getDate() + config.daysToSync - 1)
 
-    let events = []
-    for (const classKey of classList) {
-        let classId = await getClassID(classKey)
-        let timetable = await untis.getTimetableForRange(today, endtime,classId.id, 1);
-        timetable.forEach(element => {
+        let events = []
+        let events_sorted = []
 
-            baseDate = WebUntis.convertUntisDate(element.date)
-            data = {
-                summary: (element.su[0]) ? element.su[0].longname : "unkown",
-                start: {
-                    dateTime: WebUntis.convertUntisTime(element.startTime, baseDate)
-                },
-                end: {
-                    dateTime: WebUntis.convertUntisTime(element.endTime, baseDate)
-                },
-                location: `${(element.ro[0]) ? element.ro[0].name : "unknown"} `,
-                description: `teacher: ${(element.te[0]) ? element.te[0].name : "unkown"}` +
-                    `(${(element.te[0]) ? element.te[0].longname : "unkown"})`
+        for (const classKey of classList) {
+            let classId = await getClassID(classKey)
+            let timetable = await untis.getTimetableForRange(today, endtime,classId.id, 1);
+            timetable.forEach(element => {
+
+                baseDate = WebUntis.convertUntisDate(element.date)
+                data = {
+                    summary: (element.su[0]) ? element.su[0].longname : "unkown",
+                    start: {
+                        dateTime: WebUntis.convertUntisTime(element.startTime, baseDate)
+                    },
+                    end: {
+                        dateTime: WebUntis.convertUntisTime(element.endTime, baseDate)
+                    },
+                    location: `${(element.ro[0]) ? element.ro[0].name : "unknown"}`,
+                    description: `teacher: ${(element.te[0]) ? element.te[0].name : "unkown"}` +
+                        `(${(element.te[0]) ? element.te[0].longname : "unkown"})`
+                }
+                if (!config.subjectBlacklist.includes(data.summary)) events.push(data)
+            })
+        }
+        events.sort((a, b) => { return a.end.dateTime - b.end.dateTime })
+        while (events.length > 0) {
+            if (events_sorted.length == 0) events_sorted.push(events.shift())
+            else {
+                let element = events.shift()
+                if ((element.start.dateTime.toString() === events_sorted[events_sorted.length - 1].end.dateTime.toString()) && (element.summary == events_sorted[events_sorted.length - 1].summary)) {
+                    events_sorted[events_sorted.length - 1].end.dateTime = element.end.dateTime
+                }
+                else events_sorted.push(element)
             }
-            if (!config.subjectBlacklist.includes(data.summary)) events.push(data)
-        })
+        }
+        return events_sorted
     }
-    return events
-}
 
 
 
