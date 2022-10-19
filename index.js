@@ -109,21 +109,22 @@ async function addEvents(events) {
         }
     }
 
-
-    events.forEach(element => {
-        calendar.events.insert({
+    for (let i = 0; i < events.length; i++) {
+        console.log(events[i])
+        let res= await calendar.events.insert({
+            auth: auth,
+            calendarId: config.calendarID,
+            resource: events[i]
+        },
+            {
                 auth: auth,
                 calendarId: config.calendarID,
-                resource: element,
-            },
-            function (err, event) {
-                if (err) {
-                    console.log('There was an error contacting the Calendar service: ' + err)
-                    return
-                }
-                console.log('Event created: %s', event.data)
-            })
-    })
+                resource: events[i]
+            }
+        )
+    }
+
+
 }
 
 async function getEvents() {
