@@ -1,5 +1,5 @@
 # select your base image to start with
-FROM node:14-alpine3.12
+FROM node:18.13.0
 
 # Create app directory
 # this is the location where you will be inside the container
