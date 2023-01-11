@@ -8,37 +8,41 @@ const { google } = require('googleapis');
 const WebUntis = require("webuntis");
 
 let config = JSON.parse(fs.readFileSync('config/config.json'))
+
+Run();
+
+schedule.scheduleJob(config.schedule, () => Run());
 console.log("waiting")
-schedule.scheduleJob(config.schedule, () => {
+function Run() {
     console.log("Running")
-const calendar = google.calendar({ version: "v3" });
+    const calendar = google.calendar({ version: "v3" });
 
-const auth = new GoogleAuth({
-    keyFilename: 'config/google-credentials.json',
-    scopes: ["https://www.googleapis.com/auth/calendar"]
-})
+    const auth = new GoogleAuth({
+        keyFilename: 'config/google-credentials.json',
+        scopes: ["https://www.googleapis.com/auth/calendar"]
+    })
 
-const authClient = auth.getClient().then(() => {
-    getCalEvents().then((events) => addEvents(events))
-})
+    const authClient = auth.getClient().then(() => {
+        getCalEvents().then((events) => addEvents(events))
+    })
 
 
-const classList = config.ClassList
-const QRCodeData = config.Qr;
+    const classList = config.ClassList
+    const QRCodeData = config.Qr;
 //date of tomorrow
-let date = new Date();
-date.setDate(date.getDate());
+    let date = new Date();
+    date.setDate(date.getDate());
 //begining of the week
 
-const untis = new WebUntisLib.WebUntisQR(QRCodeData);
+    const untis = new WebUntisLib.WebUntisQR(QRCodeData);
 
-async function getClassID(classname) {
-    await untis.login()
-    const classes = await untis.getClasses()
-    const ourClass = classes.filter(classElement => classElement.name === classname)[0]
-    console.log(ourClass)
-    return ourClass
-}
+    async function getClassID(classname) {
+        await untis.login()
+        const classes = await untis.getClasses()
+        const ourClass = classes.filter(classElement => classElement.name === classname)[0]
+        console.log(ourClass)
+        return ourClass
+    }
 // ---------------------------- Google Calendar ----------------------------
 
     async function getCalEvents() {
@@ -88,54 +92,55 @@ async function getClassID(classname) {
 
 
 
-async function addEvents(events) {
+    async function addEvents(events) {
 
-    let currEvents = (await getEvents()).data.items
+        let currEvents = (await getEvents()).data.items
 
-    for (let i = 0; i < events.length; i++) {
-        for (let j = 0; j < currEvents.length; j++) {
-            if (events[i].start.dateTime >= new Date(currEvents[j].start.dateTime) &&
-                events[i].start.dateTime <= new Date(currEvents[j].end.dateTime)) {
-                try {
-                    const res = await calendar.events.delete({
-                        auth: auth,
-                        calendarId: config.calendarID,
-                        eventId: currEvents[j].id
-                    })
-                    console.log("Event deleted: %s", res.data)
+        for (let i = 0; i < events.length; i++) {
+            for (let j = 0; j < currEvents.length; j++) {
+                if (events[i].start.dateTime >= new Date(currEvents[j].start.dateTime) &&
+                    events[i].start.dateTime <= new Date(currEvents[j].end.dateTime)) {
+                    try {
+                        const res = await calendar.events.delete({
+                            auth: auth,
+                            calendarId: config.calendarID,
+                            eventId: currEvents[j].id
+                        })
+                        console.log("Event deleted: %s", res.data)
+                    }
+                    catch { }
                 }
-                catch { }
             }
         }
+
+        for (let i = 0; i < events.length; i++) {
+            console.log(events[i])
+            let res= await calendar.events.insert({
+                    auth: auth,
+                    calendarId: config.calendarID,
+                    resource: events[i]
+                },
+                {
+                    auth: auth,
+                    calendarId: config.calendarID,
+                    resource: events[i]
+                }
+            )
+        }
+
+
     }
 
-    for (let i = 0; i < events.length; i++) {
-        console.log(events[i])
-        let res= await calendar.events.insert({
+    async function getEvents() {
+        var date = new Date();
+        date.setDate(date.getDate() - 1);
+        return await calendar.events.list({
             auth: auth,
             calendarId: config.calendarID,
-            resource: events[i]
-        },
-            {
-                auth: auth,
-                calendarId: config.calendarID,
-                resource: events[i]
-            }
-        )
+            timeMin: date.toISOString(),
+            singleEvents: true,
+        })
     }
-
-
 }
-
-async function getEvents() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-    return await calendar.events.list({
-        auth: auth,
-        calendarId: config.calendarID,
-        timeMin: date.toISOString(),
-        singleEvents: true,
-    })
-}})
 
 
