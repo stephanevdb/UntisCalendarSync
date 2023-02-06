@@ -16,6 +16,9 @@ and save them as google-credentials.json in application directory.
 5. In the calendar settings go to "Share with specific people", click "Add people" and paste the client email from the downloaded JSON
 service key file.
 
+## config folder
+The folder structure should look like this. <br>
+<img width="229" alt="image" src="https://user-images.githubusercontent.com/35726237/217113852-1f026f67-6ff4-4177-92e3-ea3a0eedf673.png">
 
 
 
