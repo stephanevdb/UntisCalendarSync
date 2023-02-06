@@ -42,6 +42,8 @@ services:
   untis-to-googlecalendar:
     image: stephanevdb/untis-to-googlecalendar:latest
     container_name: untis-to-googlecalendar
+    environment:
+      - TZ=Europe/Brussels
     volumes:
       - /path/on/host:/usr/src/app/config
     restart: unless-stopped
