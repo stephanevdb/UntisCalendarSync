@@ -70,8 +70,8 @@ function Run() {
                         dateTime: WebUntis.convertUntisTime(element.endTime, baseDate)
                     },
                     location: `${(element.ro[0]) ? element.ro[0].name : "unknown"}`,
-                    description: `teacher: ${(element.te[0]) ? element.te[0].name : "unkown"}` +
-                        `(${(element.te[0]) ? element.te[0].longname : "unkown"})`
+                    description: `Teacher: ${(element.te[0]) ? element.te[0].name : "unkown"}` +
+                        `(${(element.te[0]) ? element.te[0].longname : "unkown"})` + '\n' +element.lstext
                 }
                 if (!config.subjectBlacklist.includes(data.summary)) events.push(data)
             })
